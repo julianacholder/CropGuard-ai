@@ -1,6 +1,4 @@
 import React, { useState, useRef } from "react";
-// import { PestDetection } from "@/entities/PestDetection";
-// import { InvokeLLM, UploadFile } from "@/integrations/Core";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -22,6 +20,9 @@ import { Badge } from "@/components/ui/badge";
 import CameraCapture from "../components/detection/CameraCapture";
 import FileUpload from "../components/detection/FileUpload";
 import AnalysisResults from "../components/detection/AnalysisResults";
+
+// Import the API service
+import EnhancedPlantAnalysis from "../utils/EnhancedPlantAnalysis";
 
 export default function Detection() {
   const navigate = useNavigate();
@@ -49,96 +50,78 @@ export default function Detection() {
     setMode('upload');
   };
 
+  // Updated analyzeImage function with real API integration
   const analyzeImage = async () => {
+    // Add this at the top of analyzeImage function
+console.log('🔍 Debug env vars:');
+console.log('Roboflow:', import.meta.env.VITE_ROBOFLOW_API_KEY);
+console.log('Groq:', import.meta.env.VITE_GROQ_API_KEY);
     if (!selectedFile) return;
 
     setAnalyzing(true);
     setError(null);
 
     try {
-      // TODO: Implement when Core integration is ready
+      console.log('🚀 Starting AI analysis...');
       
-      /* COMMENTED OUT - CORE INTEGRATION NOT YET IMPLEMENTED
-      // Upload the image first
-      const { file_url } = await UploadFile({ file: selectedFile });
-
-      // Analyze with AI
-      const analysisResult = await InvokeLLM({
-        prompt: `Analyze this agricultural image for pest detection. Look for insects, diseases, or signs of pest damage on crops or plants. 
-        
-        Provide detailed analysis including:
-        1. Pest identification (if any pests are visible)
-        2. Confidence level of detection
-        3. Severity assessment 
-        4. Affected crop type (if identifiable)
-        5. Recommended treatment approach
-        6. Prevention strategies
-        
-        If no pests are detected, indicate healthy crop status.`,
-        file_urls: [file_url],
-        response_json_schema: {
-          type: "object",
-          properties: {
-            pest_detected: { type: "boolean" },
-            pest_name: { type: "string" },
-            confidence_score: { type: "number" },
-            severity_level: { type: "string", enum: ["low", "moderate", "high", "critical"] },
-            crop_type: { type: "string" },
-            damage_description: { type: "string" },
-            treatment_recommendation: { type: "string" },
-            prevention_tips: { type: "array", items: { type: "string" } },
-            immediate_action_needed: { type: "boolean" }
-          }
-        }
-      });
-
-      if (analysisResult.pest_detected) {
-        // Save detection to database
-        const detectionData = {
-          image_url: file_url,
-          detected_pest: analysisResult.pest_name,
-          confidence_score: analysisResult.confidence_score,
-          severity_level: analysisResult.severity_level,
-          crop_type: analysisResult.crop_type,
-          treatment_recommendation: analysisResult.treatment_recommendation,
-          status: 'detected'
-        };
-
-        await PestDetection.create(detectionData);
+      // Initialize the API service
+      const analyzer = new EnhancedPlantAnalysis();
+      
+      // Validate API keys first
+      const keyErrors = analyzer.validateApiKeys();
+      if (keyErrors.length > 0) {
+        throw new Error(`Configuration error: ${keyErrors.join(' ')}`);
       }
-
-      setResults({
-        ...analysisResult,
-        image_url: file_url
-      });
-      */
-
-      // TEMPORARY MOCK DATA FOR UI TESTING
-      setTimeout(() => {
-        const mockResults = {
-          pest_detected: true,
-          pest_name: "Aphids",
-          confidence_score: 0.85,
-          severity_level: "moderate",
-          crop_type: "Tomato",
-          damage_description: "Small green insects visible on leaf undersides causing yellowing",
-          treatment_recommendation: "Apply insecticidal soap or neem oil spray",
-          prevention_tips: [
-            "Regular inspection of plants",
-            "Encourage beneficial insects like ladybugs",
-            "Avoid over-fertilizing with nitrogen"
-          ],
-          immediate_action_needed: true,
-          image_url: URL.createObjectURL(selectedFile) // Use local blob URL for now
-        };
-        
-        setResults(mockResults);
-        setAnalyzing(false);
-      }, 2000); // Simulate API delay
+      
+      // Show progress updates
+      console.log('🔍 Detecting diseases with Roboflow...');
+      
+      // Run complete analysis with both Roboflow and Groq
+      const analysisResults = await analyzer.analyzeComplete(selectedFile);
+      
+      console.log('✅ Analysis completed:', analysisResults);
+      
+      // Format results for your AnalysisResults component
+      const formattedResults = {
+        pest_detected: analysisResults.pest_detected,
+        pest_name: analysisResults.pest_name,
+        confidence_score: analysisResults.confidence_score,
+        severity_level: analysisResults.severity_level,
+        crop_type: analysisResults.crop_type,
+        damage_description: analysisResults.pest_detected 
+          ? `${analysisResults.pest_name} detected with ${(analysisResults.confidence_score * 100).toFixed(1)}% confidence`
+          : 'No disease symptoms detected in the plant',
+        treatment_recommendation: analysisResults.treatment_recommendation,
+        prevention_tips: analysisResults.prevention_tips,
+        recovery_timeline: analysisResults.recovery_timeline,
+        warning_signs: analysisResults.warning_signs,
+        immediate_action_needed: analysisResults.immediate_action_needed,
+        image_url: analysisResults.image_url,
+        analysis_source: analysisResults.analysis_source,
+        timestamp: analysisResults.timestamp
+      };
+      
+      setResults(formattedResults);
 
     } catch (error) {
-      setError('Failed to analyze image. Please try again.');
-      console.error('Analysis error:', error);
+      console.error('❌ Analysis error:', error);
+      
+      // Provide more specific error messages
+      let errorMessage = 'Failed to analyze image. ';
+      
+      if (error.message.includes('Configuration error')) {
+        errorMessage += 'Please check your API keys in the .env.local file.';
+      } else if (error.message.includes('Roboflow')) {
+        errorMessage += 'Disease detection service is unavailable. Please try again later.';
+      } else if (error.message.includes('Groq')) {
+        errorMessage += 'AI recommendation service is unavailable. Disease detection may still work.';
+      } else {
+        errorMessage += 'Please check your internet connection and try again.';
+      }
+      
+      setError(errorMessage);
+      
+    } finally {
       setAnalyzing(false);
     }
   };
@@ -152,6 +135,26 @@ export default function Detection() {
     }
   };
 
+  // Check if API keys are configured
+  const checkApiConfiguration = () => {
+  // Use import.meta.env for Vite or check if process exists
+  const roboflowKey = typeof process !== 'undefined' 
+    ? process.env.REACT_APP_ROBOFLOW_API_KEY 
+    : import.meta.env.REACT_APP_ROBOFLOW_API_KEY;
+    
+  const groqKey = typeof process !== 'undefined' 
+    ? process.env.REACT_APP_GROQ_API_KEY 
+    : import.meta.env.REACT_APP_GROQ_API_KEY;
+
+    // Add this at the very top of your analyzeImage function
+
+  
+
+  return null;
+};
+
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50 p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
@@ -163,11 +166,18 @@ export default function Detection() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold text-green-900">AI Pest Detection</h1>
-            <p className="text-green-600 mt-1">Upload or capture an image of your crops for instant pest analysis</p>
+            <h1 className="text-3xl font-bold text-green-900">AI Crop Disease Detection</h1>
+            <p className="text-green-600 mt-1">
+              Upload or capture an image of your crops for instant AI-powered disease detection and treatment recommendations.
+            </p>
+           
           </div>
         </div>
 
+        {/* API Configuration Check */}
+        {checkApiConfiguration()}
+
+        {/* Error Display */}
         {error && (
           <Alert variant="destructive" className="mb-6 border-red-200 bg-red-50">
             <AlertTriangle className="h-4 w-4" />
@@ -185,6 +195,9 @@ export default function Detection() {
                 </CardTitle>
                 <p className="text-green-600 mt-2">
                   Take a clear photo of affected crops or upload an existing image
+                </p>
+                <p className="text-sm text-green-500 mt-1">
+                  AI will detect diseases and provide treatment recommendations
                 </p>
               </CardHeader>
               <CardContent>
@@ -245,12 +258,12 @@ export default function Detection() {
                         {analyzing ? (
                           <>
                             <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                            Analyzing...
+                            Analyzing with AI...
                           </>
                         ) : (
                           <>
                             <Leaf className="w-5 h-5 mr-2" />
-                            Analyze Image
+                            Analyze with AI
                           </>
                         )}
                       </Button>
@@ -263,6 +276,19 @@ export default function Detection() {
                         Choose Different Image
                       </Button>
                     </div>
+
+                    {analyzing && (
+                      <div className="mt-4 text-sm text-green-600">
+                        <div className="flex items-center justify-center gap-2 mb-2">
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span>Analyzing with AI...</span>
+                        </div>
+                        <div className="text-xs text-green-500 space-y-1">
+                          <div>🔍 Detecting diseases with AI...</div>
+                          <div>🤖 Generating recommendations with our AI...</div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </CardContent>

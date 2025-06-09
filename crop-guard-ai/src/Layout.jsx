@@ -33,12 +33,12 @@ const navigationItems = [
     icon: LayoutDashboard,
   },
   {
-    title: "Detect Pests",
+    title: "Detect Disease",
     url: createPageUrl("Detection"),
     icon: Camera,
   },
   {
-    title: "Pest Library",
+    title: "Crop Disease Library",
     url: createPageUrl("PestLibrary"),
     icon: Bug,
   },
@@ -95,7 +95,7 @@ export default function Layout() { // Remove children and currentPageName props
               </div>
               <div>
                 <h2 className="font-bold text-lg text-green-900">CropGuard AI</h2>
-                <p className="text-xs text-green-600 font-medium">Smart Pest Detection</p>
+                <p className="text-xs text-green-600 font-medium">Smart Crop Disease Detection</p>
               </div>
             </div>
           </SidebarHeader>
@@ -139,7 +139,7 @@ export default function Layout() { // Remove children and currentPageName props
                       <AlertTriangle className="w-4 h-4 text-red-600" />
                       <span className="text-sm font-semibold text-red-800">Emergency</span>
                     </div>
-                    <p className="text-xs text-red-700 mb-3">Severe infestation detected?</p>
+                    <p className="text-xs text-red-700 mb-3">Severe diseases detected?</p>
                     <Link 
                       to={createPageUrl("Detection")} 
                       className="inline-flex items-center gap-1 px-3 py-1.5 bg-red-600 text-white text-xs font-medium rounded-lg hover:bg-red-700 transition-colors"

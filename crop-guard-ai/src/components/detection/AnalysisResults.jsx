@@ -25,9 +25,12 @@ const severityColors = {
 export default function AnalysisResults({ results, onNewDetection, onViewHistory }) {
   const isPestDetected = results.pest_detected;
   const confidenceLevel = results.confidence_score || 0;
+  
 
+  
   return (
     <div className="space-y-6">
+      
       {/* Main Results Card */}
       <Card className="border-0 shadow-xl bg-white">
         <CardHeader className="text-center pb-6">
@@ -44,13 +47,13 @@ export default function AnalysisResults({ results, onNewDetection, onViewHistory
           </div>
           
           <CardTitle className="text-2xl mb-2">
-            {isPestDetected ? 'Pest Detected!' : 'Healthy Crops Detected'}
+            {isPestDetected ? 'Disease Detected!' : 'Healthy Crops Detected'}
           </CardTitle>
           
           <p className="text-gray-600">
             {isPestDetected 
-              ? 'Our AI has identified potential pest activity in your crop image.'
-              : 'Great news! No pest activity detected in this image.'
+              ? 'Our AI has identified potential disease in your crop image.'
+              : 'Great news! No disease detected in this image.'
             }
           </p>
         </CardHeader>
@@ -82,8 +85,8 @@ export default function AnalysisResults({ results, onNewDetection, onViewHistory
                 <div className="space-y-4">
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                      <Bug className="w-4 h-4" />
-                      Detected Pest
+                      <Leaf className="w-4 h-4" />
+                      Detected Disease
                     </h3>
                     <p className="text-lg font-medium text-red-700">{results.pest_name}</p>
                   </div>
