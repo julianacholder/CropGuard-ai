@@ -172,7 +172,7 @@ export default function Layout() { // Remove children and currentPageName props
               <SidebarTrigger className="hover:bg-green-100 p-2 rounded-lg transition-colors duration-200" />
               <div className="flex items-center gap-2">
                 <Shield className="w-6 h-6 text-green-600" />
-                <h1 className="text-xl font-bold text-green-900">CropGuard AI</h1>
+                <h1 className="text-xl font-bold text-green-900">Crop Detector</h1>
               </div>
             </div>
           </header>
