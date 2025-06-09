@@ -120,7 +120,7 @@ export default function Dashboard() {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
               <div>
                 <h1 className="text-3xl md:text-4xl font-bold mb-4">
-                  Welcome to Crop Disease Detection
+                  Welcome to Crop Disease Detector
                 </h1>
                 <p className="text-green-100 text-lg md:text-xl mb-6 max-w-2xl">
                   Advanced AI-powered crop disease detection to protect your harvest and ensure healthy crops. 
