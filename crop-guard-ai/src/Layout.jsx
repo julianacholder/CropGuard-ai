@@ -94,7 +94,7 @@ export default function Layout() { // Remove children and currentPageName props
                 </div>
               </div>
               <div>
-                <h2 className="font-bold text-lg text-green-900">CropGuard AI</h2>
+                <h2 className="font-bold text-lg text-green-900">Crop Detector</h2>
                 <p className="text-xs text-green-600 font-medium">Smart Crop Disease Detection</p>
               </div>
             </div>
