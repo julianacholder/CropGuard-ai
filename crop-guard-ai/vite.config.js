@@ -10,11 +10,11 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt'],
       manifest: {
-        name: 'My PWA App',
-        short_name: 'PWA',
+        name: 'CropGuard AI',
+        short_name: 'CropGuard',
         description: 'My Progressive Web App built with React and Vite',
-        theme_color: '#ffffff',
-        background_color: '#ffffff',
+        theme_color: '#179746',
+        background_color: '#179746',
         display: 'standalone',
         start_url: '/',
         icons: [
