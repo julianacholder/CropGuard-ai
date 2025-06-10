@@ -7,7 +7,7 @@ class EnhancedPlantAnalysis {
  constructor() {
   this.roboflowApiKey = import.meta.env.VITE_ROBOFLOW_API_KEY;
   this.groqApiKey = import.meta.env.VITE_GROQ_API_KEY;
-  this.roboflowEndpoint = 'https://detect.roboflow.com/plantvillage-dataset/1';
+  this.roboflowEndpoint = 'https://detect.roboflow.com/plants-diseases-detection-and-classification/12';
 }
 
   // ====================================================================
