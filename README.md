@@ -7,6 +7,31 @@
 
 > **Advanced AI-powered crop disease detection to protect your harvest and ensure healthy crops. Identify, diagnose, and treat plant diseases before they spread.**
 
+## Demo
+
+**Live Demo**: [https://cropguard-ai.vercel.app](https://crop-guard-ai-alpha.vercel.app/dashboard)
+
+## Screenshots
+
+### Main Dashboard
+<p align="center">
+  <img src="./crop-guard-ai/docs/images/dashboard.png" alt="CropGuard AI Dashboard" width="800">
+</p>
+
+### Disease Detection in Action
+<p align="center">
+  <img src="./crop-guard-ai/docs/images/upload.png" alt="Disease Detection Demo" width="600">
+</p>
+
+<p align="center">
+  <img src="./crop-guard-ai/docs/images/detector.png" alt="Disease Detection Demo" width="600">
+</p>
+
+### Disease Library
+<p align="center">
+  <img src="./crop-guard-ai/docs/images/library.png" alt="Disease Library" width="700">
+</p>
+
 ## Overview
 
 CropGuard AI is a comprehensive web application that leverages cutting-edge artificial intelligence to detect crop diseases in real-time. Using computer vision and machine learning, farmers and agricultural professionals can quickly identify plant diseases, receive AI-generated treatment recommendations, and access a comprehensive disease library.
